@@ -1,0 +1,13 @@
+train: /Users/yoonhyeok/yolov5/data/hwatooDataSet/train/images
+val: /Users/yoonhyeok/yolov5/data/hwatooDataSet/valid/images
+test: /Users/yoonhyeok/yolov5/data/hwatooDataSet/test/images
+
+nc: 1
+names: ['hwatoo']
+
+roboflow:
+  workspace: yangbong
+  project: hwatoo-model
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/yangbong/hwatoo-model/dataset/1
