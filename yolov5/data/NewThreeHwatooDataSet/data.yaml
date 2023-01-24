@@ -1,0 +1,13 @@
+train: /Users/yoonhyeok/yolov5/data/NewThreeHwatooDataSet/train/images
+val: /Users/yoonhyeok/yolov5/data/NewThreeHwatooDataSet/valid/images
+test: /Users/yoonhyeok/yolov5/data/NewThreeHwatooDataSet/test/images
+
+nc: 1
+names: ['ThreeHwatoo']
+
+roboflow:
+  workspace: project
+  project: threehwatoo
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/project/threehwatoo/dataset/2
