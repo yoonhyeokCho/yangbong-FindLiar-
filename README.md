@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 ## 실행 명령어 
 ```bash
-python detect.py --weight runs/train/newthreehwatoo_yolov5_results/weights/best.pt --img 416 --conf 0.1 --source 0
+python detect.py --weight runs/train/newthreehwatoo_yolov5_results_2/weights/best.pt --img 416 --conf 0.5 --source 0  
 
 
 ```
