@@ -163,6 +163,7 @@ def run(
                 # 인식된 사물이 'hwatoo' 라면 데이터 1 전송
                 if(names[int(c)] == 'hwatoo'):
                     sendObjectToArduino(1)
+                #
 
 
                 # Write results
@@ -261,6 +262,7 @@ def sendObjectToArduino(input):
 
     response = requests.post('http://192.168.105.161:4000/move',json={"position":input})
     print(response.status_code)
+#
 def main(opt):
     check_requirements(exclude=('tensorboard', 'thop'))
     run(**vars(opt))
