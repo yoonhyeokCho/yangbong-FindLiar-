@@ -115,6 +115,10 @@ def run(
     # Run inference
     model.warmup(imgsz=(1 if pt or model.triton else bs, 3, *imgsz))  # warmup
     seen, windows, dt = 0, [], (Profile(), Profile(), Profile())
+
+
+    flag = 1
+
     for path, im, im0s, vid_cap, s in dataset:
         with dt[0]:
             im = torch.from_numpy(im).to(model.device)
@@ -147,7 +151,20 @@ def run(
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # im.jpg
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
-            s += '%gx%g ' % im.shape[2:]  # print string
+            s += '%gx%g' % im.shape[2:]  # print string  여기가 인식되는 부분
+
+
+
+            if((seen / 12 % 4) == flag % 4):
+                print(seen / 4 % 4)
+                print(flag)
+                flag += 1
+                print("hello!")
+                sendObjectToArduino(flag % 4)
+
+
+
+
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
             annotator = Annotator(im0, line_width=line_thickness, example=str(names))
@@ -158,13 +175,17 @@ def run(
                 # Print results
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
-                    s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
+                    s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string  여기가 인식했을때의 처리부      smash 부분
 
-                # 인식된 사물이 'hwatoo' 라면 데이터 1 전송
-                if(names[int(c)] == 'hwatoo'):
-                    sendObjectToArduino(1)
-                #
+                # sendObjectToArduino(3)
 
+
+                # 인식된 사물이 '분watoo' 라면 데이터 1 전송
+                # if(names[int(c)] == 'hwatoo'):
+                #     sendObjectToArduino(3)
+
+                if(names[int(c)] == 'ThreeHwatoo'):
+                    sendObjectToArduinoSmash()
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
@@ -257,12 +278,22 @@ def parse_opt():
     print_args(vars(opt))
     return opt
 
-# 아두이노 컨트롤 웹으로 http 요청
+# 아두이노 컨트롤 웹으로 http 요청 - move
 def sendObjectToArduino(input):
 
-    response = requests.post('http://192.168.105.161:4000/move',json={"position":input})
+    response = requests.post('http://192.168.104.76:4000/move',json={"position":input})
+    print(response.status_code)
+
+
+
+# 아두이노 컨트롤 웹으로 http 요청 - smash
+def sendObjectToArduinoSmash():
+
+    response = requests.post('http://192.168.104.76:4000/smash')
     print(response.status_code)
 #
+
+
 def main(opt):
     check_requirements(exclude=('tensorboard', 'thop'))
     run(**vars(opt))
